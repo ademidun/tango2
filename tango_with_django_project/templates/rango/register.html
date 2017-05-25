@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Rango</title>
-    </head>
-
-    <body>
-        <h1>Register with Rango</h1>
-
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
+    
+    {% block title %}Register{% endblock %}
+    {% block body_block %}
         {% if registered %}
         Rango says: <strong>thank you for registering!</strong>
         <a href="/rango/">Return to the homepage.</a><br />
@@ -30,3 +26,4 @@
         {% endif %}
     </body>
 </html>
+{% endblock %}
