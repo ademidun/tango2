@@ -7,6 +7,9 @@
 			{% else %}
 			<h1>Rango says... hello world!</h1>
 			 <p> visits: {{ visits }}</p>
+             {% if last_visit %}
+                <p> Last Visit: {{ last_visit }}</p>
+             {% endif %}
 		{% endif %}
         {% if categories %}
             <ul>
