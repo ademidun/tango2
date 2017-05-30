@@ -9,7 +9,7 @@ def run_query(search_terms):
         print "BING_API_KEY: ", (BING_API_KEY)
         search_service = PyMsCognitiveWebSearch(BING_API_KEY, search_terms)
         response = search_service.search(limit=10, format='json')
-        print "response[0].__dict__: %s \n" % (response[0].__dict__)
+        # print "response[0].__dict__: %s \n" % (response[0].__dict__)
 
         results = []
         for item in response:
@@ -17,11 +17,11 @@ def run_query(search_terms):
                 'title': item.title,
                 'summary': item.snippet,
                 'link': item.url, })
-        print "results: %s \n" % (results)
+        # print "results: %s \n" % (results)
 
     except :
         e = sys.exc_info()[0]
-        print "<p>Error: %s</p>" % e
+        print "Error: %s" % e
 
     return results
 
