@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse,HttpResponseRedirect
-from rango.models import Category, Page
+from rango.models import Category, Page, UserProfile
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -86,6 +86,24 @@ def category(request, category_name_slug):
     return render(request, 'rango/category.html', context_dict)
 
 
+@login_required
+def like_category(request):
+
+    cat_id = None
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+
+    likes = 0
+    if cat_id:
+        cat = Category.objects.get(id=int(cat_id))
+        if cat:
+            likes = cat.likes + 1
+            cat.likes =  likes
+            cat.save()
+
+    return HttpResponse(likes)
+
+
 def search(request):
 
     result_list = []
@@ -98,6 +116,43 @@ def search(request):
             result_list = run_query(query)
 
     return render(request, 'rango/search.html', {'result_list': result_list})
+
+
+def register_profile(request):
+    try:
+        user_profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user_profile)
+        print "request.POST: %s \n" % request.POST
+        if form.is_valid():
+            form.save()
+            return redirect('/rango/profile')
+    else:
+        form = UserProfileForm(instance=user_profile)
+        context_dict = {'form': form}
+        return render(request, 'rango/profile_registration.html', context_dict)
+
+def profile(request):
+
+    if request.user.is_authenticated():
+        print "user: %s \n" % request.user
+        try:
+            # user_profile = UserProfile(user=request.user)
+            # todo How is the line above and the line below differemt
+            user_profile = request.user.userprofile
+            print "user_profile: %s \n" % user_profile
+            context_dict = {'user_profile': user_profile}
+            return render(request, 'rango/profile.html', context_dict)
+
+        except UserProfile.DoesNotExist:
+            return redirect('/rango/add_profile')
+
+
+    else:
+        return index(request)
 
 
 def track_url(request):
@@ -148,6 +203,32 @@ def add_category(request):
     #return render(request, 'rango/add_category.html', {'form': form})
     return render(request, 'rango/add_category.html', context_dict)
 
+
+def get_category_list(max_results=0, starts_with=''):
+    cat_list = []
+    if starts_with:
+        cat_list = Category.objects.filter(name__istartswith=starts_with)
+        print "cat_list: %s \n" % cat_list
+        cat_list2 = Category.objects.get(name__istartswith=starts_with)
+        print "cat_list2: %s \n" % cat_list2
+    if cat_list and max_results > 0:
+        if cat_list.count() > max_results:
+            cat_list = cat_list[:max_results]
+
+    return cat_list
+
+
+def suggest_category(request):
+
+    cat_list = []
+    starts_with = ''
+    if request.method == 'GET':
+        starts_with = request.GET['suggestion']
+
+    cat_list = get_category_list(8, starts_with)
+    context_dict = {'cats': cat_list}
+    context_dict['list_group_item'] = 'list-group-item' #is it bad practice to switch between hypen and underscore
+    return render(request, 'rango/cats.html', context_dict)
 
 @login_required
 def add_page(request, category_name_slug):

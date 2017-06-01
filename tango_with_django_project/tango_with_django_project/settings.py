@@ -19,6 +19,9 @@ TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 # print TEMPLATE_PATH
 STATIC_PATH = os.path.join(BASE_DIR,'static')
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Absolute path to the media directoryg
+SITE_ID = 1
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -109,7 +112,4 @@ STATICFILES_DIRS = (
     STATIC_PATH,
 )
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Absolute path to the media directoryg
-SITE_ID = 1
 

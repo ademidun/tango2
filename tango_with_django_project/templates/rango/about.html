@@ -8,5 +8,8 @@
             </div>
         hello world! <strong>Here is the about page.</strong><br />
         <a href="{% url 'index' %}">Home</a><br />
+        <button class="btn btn-secondary ui-button" onClick="alert('You clicked the button using Javascript.');">
+       Click Me - I run Javascript
+</button>
         <img src="{% static "images/rango.jpg" %}" alt="Picture of Rango" />
 {% endblock %}

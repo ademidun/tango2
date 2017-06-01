@@ -79,3 +79,8 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('website', 'picture')
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        self.fields['website'].widget.attrs.update({'class': 'form-control'})
+        self.fields['picture'].widget.attrs.update({'class': 'form-control'})
