@@ -19,6 +19,13 @@ class Category(models.Model):
         if self.slug == '':
             self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
+        if (self.views < 0):
+            print "Category view: %s." \
+                  " Is less than zero, reset to zero\n" % self.views
+            self.views = 0
+
+
+
 
     def __unicode__(self):
             return self.name
